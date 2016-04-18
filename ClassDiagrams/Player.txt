@@ -1,0 +1,9 @@
+Player
+======
+Fields:
+--------
+float moveSpeed
+int moveDirection
+
+Methods:
+--------
