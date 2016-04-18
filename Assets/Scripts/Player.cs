@@ -4,15 +4,15 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
 	private bool canJump = false;
-	private BoxCollider2D playerCollider;
+	private Rigidbody2D rigidBody;
 
 	[Header("Inspector variables")]
-	public float moveSpeed = 2;
+	public float moveSpeed = 5f;
 	public float jumpDistance = 25;
 	public int moveDirection;
 
 	void Awake(){
-		playerCollider = GetComponent<BoxCollider2D>();
+		rigidBody = GetComponent<Rigidbody2D>();
 	}
 
 	void Update () {
@@ -33,15 +33,14 @@ public class Player : MonoBehaviour {
 	void Move(){
 		float xAxis = Input.GetAxis("Horizontal");
 		float yAxis = Input.GetAxis("Vertical");
-		Vector3 pos = transform.position;
-
-		pos.x += xAxis * moveSpeed * Time.deltaTime;
+//		Vector3 pos = transform.position;
+//		pos.x += xAxis * moveSpeed * Time.deltaTime;
 		if (canJump && Input.GetKeyDown("space")) {
-			pos.y += jumpDistance * Time.deltaTime;
+			yAxis = jumpDistance;
 			canJump = false;
 		} 
-		transform.position = pos;
-
+//		transform.position = pos;
+		rigidBody.velocity = new Vector2 (moveSpeed * xAxis, yAxis);
 		print ("xAxis: " + xAxis + " yAxis: " + yAxis);
 
 	}
