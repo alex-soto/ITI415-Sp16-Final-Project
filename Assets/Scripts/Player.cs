@@ -8,7 +8,7 @@ public class Player : MonoBehaviour {
 
 	[Header("Inspector variables")]
 	public float moveSpeed = 5f;
-	public float jumpDistance = 25;
+	public float jumpDistance = 20f;
 	public int moveDirection;
 
 	void Awake(){
@@ -41,7 +41,7 @@ public class Player : MonoBehaviour {
 		} 
 //		transform.position = pos;
 		rigidBody.velocity = new Vector2 (moveSpeed * xAxis, yAxis);
-		print ("xAxis: " + xAxis + " yAxis: " + yAxis);
+		//print ("xAxis: " + xAxis + " yAxis: " + yAxis);
 
 	}
 
