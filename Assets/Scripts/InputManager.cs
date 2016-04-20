@@ -1,5 +1,5 @@
 ﻿/*
-InputManager script taken from "Advanced Unity 2D: Platformer Player Movement"
+InputManager script adapted from "Advanced Unity 2D: Platformer Player Movement"
 Source URL: http://www.lynda.com/Unity-tutorials/Building-input-manager/367449/387290-4.htm
  */
 
@@ -8,11 +8,15 @@ using System.Collections;
 
 public enum Buttons {
 	Right, 
-	Left
+	Left,
+	Up,
+	Down,
+	A,
+	B
 
 }
 
-public enum Condition{
+public enum Condition {
 	GreaterThan,
 	LessThan
 }
@@ -43,6 +47,7 @@ public class InputAxisState{
 public class InputManager : MonoBehaviour {
 
 	public InputAxisState[] inputs;
+	public InputState inputState;
 
 	// Use this for initialization
 	void Start () {
@@ -52,8 +57,7 @@ public class InputManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		foreach(var input in inputs){
-			if(input.value)
-				Debug.Log ("Input Detected: " + input.button);
+			inputState.SetButtonValue(input.button, input.value);
 		}
 	}
 }
