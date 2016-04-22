@@ -8,8 +8,15 @@ using System.Collections;
 
 public class SimpleMovement : MonoBehaviour {
 
-	public float speed = 2f;
+	public float speed = 50f;
+	public float runMultiplier = 2f;
+	public LayerMask collisionLayer;
+	public bool isStanding;
 	public Buttons[] input;
+	public Color debugColor = Color.cyan;
+
+	// Temporary inspector variables
+	public float radius = 4f;
 
 	private Rigidbody2D rigidBody;
 	private InputState inputState;
@@ -21,19 +28,29 @@ public class SimpleMovement : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 
-		var right = inputState.GetButtonValue (input [0]);
-		var left = inputState.GetButtonValue (input [1]);
-		var velX = speed;
+		bool right = inputState.GetButtonValue (input [0]);
+		bool left = inputState.GetButtonValue (input [1]);
+		Vector2 pos = new Vector2 (transform.position.x, transform.position.y);
+		Physics2D.OverlapCircle (pos, radius, collisionLayer);
+		float tmpSpeed = speed;
+		float velX;
 
 		if (right || left) {
-			velX *= left ? -1 : 1;
+
+			velX = tmpSpeed * (float)inputState.direction;
 		} else {
 			velX = 0;
 		}
-
+		Debug.Log ("velX: " + velX + " rigidBody velocity: " + rigidBody.velocity);
 		rigidBody.velocity = new Vector2 (velX, rigidBody.velocity.y);
 
+	}
+
+	void OnDrawGizmos(){
+		Gizmos.color = debugColor;
+		var pos = new Vector3 (transform.position.x, transform.position.y, 1);
+		Gizmos.DrawWireSphere (pos, radius);
 	}
 }
