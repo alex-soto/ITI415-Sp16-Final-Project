@@ -46,12 +46,14 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\AbstractBehavior.cs" />
-     <Compile Include="Assets\Scripts\FaceDirection.cs" />
-     <Compile Include="Assets\Scripts\InputManager.cs" />
-     <Compile Include="Assets\Scripts\InputState.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
-     <Compile Include="Assets\Scripts\SimpleMovement.cs" />
+     <Compile Include="Assets\Scripts\StrokeManager.cs" />
+     <Compile Include="Assets\Scripts\Temp\AbstractBehavior.cs" />
+     <Compile Include="Assets\Scripts\Temp\BehaviorJump.cs" />
+     <Compile Include="Assets\Scripts\Temp\FaceDirection.cs" />
+     <Compile Include="Assets\Scripts\Temp\InputManager.cs" />
+     <Compile Include="Assets\Scripts\Temp\InputState.cs" />
+     <Compile Include="Assets\Scripts\Temp\SimpleMovement.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.7.0/Standalone/UnityEngine.UI.dll</HintPath>
  </Reference>

@@ -10,6 +10,7 @@ public class SimpleMovement : MonoBehaviour {
 
 	public float speed = 50f;
 	public float runMultiplier = 2f;
+	public float jumpSpeed = 5f;
 	public LayerMask collisionLayer;
 	public bool isStanding;
 	public Buttons[] input;
@@ -20,8 +21,7 @@ public class SimpleMovement : MonoBehaviour {
 
 	private Rigidbody2D rigidBody;
 	private InputState inputState;
-
-	// Use this for initialization
+	
 	void Awake () {
 		rigidBody = GetComponent<Rigidbody2D> ();
 		inputState = GetComponent<InputState> ();
