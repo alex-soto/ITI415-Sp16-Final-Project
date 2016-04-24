@@ -17,6 +17,7 @@ public class StrokeManager : MonoBehaviour {
 	public List<Vector2> currentPoints;
 	public LineRenderer currentLine;
 	public List<LineRenderer> lines;
+	public Material brushMaterial;
 
 	void Awake(){
 		maxMagnitude = 10f;
@@ -39,12 +40,20 @@ public class StrokeManager : MonoBehaviour {
 	}
 
 	public void StartLine(){
+
+		Vector3 lastPoint = Vector3.zero;
+
 		if (!drawing) {
 			GameObject lineRendererGO = new GameObject ("LineRenderer" + linesDrawn);
 			lineRendererGO.AddComponent<LineRenderer> ();
+			//lineRendererGO.AddComponent<SpriteRenderer>().sharedMaterial = brushMaterial;
 			lineRendererGO.tag = "LineRendererGO";
 			currentLine = lineRendererGO.GetComponent<LineRenderer> ();
-			GameObject.Instantiate (lineRendererGO);
+			Material[] materialArray = new Material[4];
+			for (var i = 0; i < materialArray.Length; i++){
+				materialArray[i] = brushMaterial;
+			}
+			currentLine.sharedMaterials = materialArray;
 			lineRendererGO.SetActive (true);
 			drawing = true;
 		} 
@@ -60,15 +69,23 @@ public class StrokeManager : MonoBehaviour {
 		mouseDelta *= maxMagnitude;
 
 		Vector3 newPointPos = transform.position + mouseDelta;
+
+//		if (currentPoints.Count > 0) {
+//			lastPoint = currentPoints[currentPoints.Count-1];
+//			Vector3 normalNewPoint = newPointPos;
+//			normalNewPoint.Normalize();
+//			newPointPos = lastPoint + normalNewPoint;
+//		}
+
 		currentPoints.Add (newPointPos);
 
 		if (currentPoints.Count < 2) {
-			currentPoints.Add (newPointPos);
 			return;
-		} else if (currentPoints.Count >= 2) {
-			currentLine.SetVertexCount(currentPoints.Count-1);
+		} else if (currentPoints.Count >= 10) {
+			currentLine.SetVertexCount(currentPoints.Count);
 			for (var i = 0; i < currentPoints.Count; i++){
 				currentLine.SetPosition(i,currentPoints[i]);
+				currentLine.SetWidth(1.5f, 1.5f);
 				if (!currentLine.enabled){
 					currentLine.enabled = true;
 				}
@@ -77,26 +94,23 @@ public class StrokeManager : MonoBehaviour {
 			if (edgeCollider == null){
 				edgeCollider = currentLine.gameObject.AddComponent<EdgeCollider2D>();
 			}
-			edgeCollider.isTrigger = true;
+			//edgeCollider.isTrigger = true;
 			edgeCollider.points = currentPoints.ToArray();
 		}
-
-		Debug.Log ("currentPoints.Count: " + currentPoints.Count);
-		// Debug.Log ("Drawing line at " + newPointPos);
-
-		// If drawing == false:
-			// Create a "LineRenderer" + linesDrawn.ToString() GameObject
-			// Add a LineRenderer Component to the LineRenderer GO and enable it
-		// currentLine.SetVertexCount (currentPoints.Count);
-		// foreach point in points : Add point to line
-		// 
 
 	}
 
 	public void StopLine(){
+
+		if (currentPoints.Count <= 10) {
+			Destroy (currentLine.gameObject);
+		} else {
+			lines.Add(currentLine);
+			linesDrawn++;
+		}
+
 		currentPoints.Clear();
 		Debug.Log ("Line ended");
-		linesDrawn++;
 		drawing = false;
 	}
 

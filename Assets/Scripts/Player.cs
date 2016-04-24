@@ -8,29 +8,47 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-	public float moveSpeed;
+	public float startingMoveSpeed;
 	public float jumpMultiplier;
+	public float lineSpeedMultiplier;
+	public int startingJumpCount;
 	public float radius = 5f;
 	public LayerMask layerMask;
 	public bool isStanding;
 
+	private float moveSpeed;
+	private int jumpCount;
 	private bool canJump = false;
+	private float startingPlayerGravity;
 	private Rigidbody2D rigidBody;
+	private CircleCollider2D playerColl;
 	private Vector2 gizmoPosition;
 	private bool hasJumped = false;
 	private float jumpDelay = 0.2f;
 	private float timeJumped;
 
 	void Awake(){
-		moveSpeed = 15f;
+		startingMoveSpeed = 15f;
+		moveSpeed = startingMoveSpeed;
+		startingJumpCount = 2;
+		jumpCount = startingJumpCount;
 		jumpMultiplier = 2f;
+		lineSpeedMultiplier = 2f;
+		startingPlayerGravity = 2f;
 		Vector2 pos = transform.position;
 		gizmoPosition = new Vector2 (pos.x, pos.y);
 		rigidBody = GetComponent<Rigidbody2D>();
+		playerColl = GetComponent<CircleCollider2D> ();
 		StrokeManager strokeManager = GetComponent<StrokeManager>();
 	}
 
+	void Start(){
+		rigidBody.gravityScale = startingPlayerGravity;
+	}
+
 	void FixedUpdate(){
+
+		//rigidBody.gravityScale = startingPlayerGravity;
 
 		float cancelDraw = Input.GetAxisRaw ("Fire2");
 		float horizontal = Input.GetAxisRaw ("Horizontal");
@@ -51,10 +69,10 @@ public class Player : MonoBehaviour {
 		// Allows player to jump when standing on a solid surface
 		if (isStanding) {
 			canJump = true;
+			jumpCount = startingJumpCount;
+			moveSpeed = startingMoveSpeed;
 		}
 
-		// string debugTest = "draw, cancelDraw, horizontal, vertical: " + draw + " " + cancelDraw + " " + horizontal + " " + vertical;
-		// Debug.Log (debugTest);
 	}
 
 	void Move(float horizontal){
@@ -63,19 +81,48 @@ public class Player : MonoBehaviour {
 	}
 
 	void Jump(float vertical){
+
+		if (jumpCount <= 0){
+			canJump = false;
+			return;
+		}
+
 		if (!hasJumped) {
-			rigidBody.velocity = new Vector2 (rigidBody.velocity.x, jumpMultiplier * moveSpeed);
 			timeJumped = Time.time;
 			hasJumped = true;
-		} else if (Time.time >= jumpDelay + timeJumped) {
+		}
+
+		if (hasJumped && Time.time >= jumpDelay + timeJumped) {
 			hasJumped = false;
-		} else {
-			canJump = false;
+		}
+
+		if (!hasJumped && jumpCount > 0) {
+			rigidBody.velocity = new Vector2 (rigidBody.velocity.x, jumpMultiplier * moveSpeed);
+			jumpCount--;
+		}
+
+	}
+
+	void OnCollisionEnter2D(Collision2D coll){
+		Debug.Log ("Entering collider: " + coll.collider);
+		if (coll.collider.tag == "LineRendererGO") {
+			jumpCount = 2;
+			canJump = true;
+			moveSpeed *= lineSpeedMultiplier;
+		}
+
+	}
+
+	void OnCollisionStay2d(Collision2D coll){
+		if (coll.collider.tag == "LineRendererGO") {
+			rigidBody.gravityScale = 0f;
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D collider){
-		Debug.Log ("Collider: " + collider);
+	void OnCollisionExit2D(Collision2D coll){
+		Debug.Log("Leaving collider: " + coll.collider);
+		moveSpeed = startingMoveSpeed;
+		rigidBody.gravityScale = startingPlayerGravity;
 	}
 
 	void OnDrawGizmos(){
