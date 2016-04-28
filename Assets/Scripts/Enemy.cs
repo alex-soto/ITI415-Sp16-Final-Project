@@ -103,26 +103,44 @@ public class Enemy : MonoBehaviour {
 
 	public GameObject target;
 	public bool isFriendly;
+	public float moveDelay;
 	public float attackDelay;
+	public float moveSpeed;
 	public Color startColor = Color.red;
 	public Color friendlyColor = Color.black;
-	
-	//private RaycastHit2D alertRaycast;
-	private RaycastHit2D attackRaycast;
+	public GameObject projectile;
+	public float projectileSpeed = 5f;
+	public int numProjectiles = 6;
+
+	private GameObject _player;
+	private Rigidbody2D rigidBody;
+	private CheckForPlayer CheckForPlayer; 
 	private float attackDistance;
-	private RaycastHit2D targetRaycast;
-	private RaycastHit2D navigationRaycast;
+	private float attackTime;
+	private float moveTime;
 
 	void Awake(){
 		isFriendly = false;
 		attackDistance = 25f;
+		moveDelay = 0.5f;
+		rigidBody = GetComponent<Rigidbody2D> ();
+	}
+
+	void Start(){
+		CheckForPlayer = gameObject.GetComponentInChildren<CheckForPlayer>();
+		_player = GameObject.FindGameObjectWithTag("Player");
 	}
 
 	void FixedUpdate(){
+
+		if (CheckForPlayer.playerInRange && (moveDelay <= Time.time - moveTime)) {
+			Move (_player);
+		}
+
 		if (target != null) {
 			// Behavior if a target has been set
-			if (Vector3.Distance(transform.position, target.transform.position) <= attackDistance){
-				Attack (target);
+			if ((attackDelay <= Time.time - attackTime) && (Vector3.Distance(transform.position, target.transform.position) <= attackDistance)){
+				Attack (target, numProjectiles);
 			} else {
 				Move (target);
 			}
@@ -145,11 +163,25 @@ public class Enemy : MonoBehaviour {
 	}
 
 	void Move(GameObject target){
-		
+		moveTime = Time.time; 
+		Vector2 newMove = transform.position - target.transform.position;
+		newMove.Normalize();
+		rigidBody.velocity = newMove * moveSpeed;
 	}
 	
-	void Attack(GameObject target){
-		
+	void Attack(GameObject target, int numProjectiles){
+		attackTime = Time.time;
+		int projectilesRemaining = numProjectiles;
+		for (int i = numProjectiles; i > 0; i--) {
+			GameObject proj = Instantiate(projectile, transform.position, Quaternion.FromToRotation(transform.position, target.transform.position)) as GameObject;
+			Rigidbody2D projRigidBody = proj.GetComponent<Rigidbody2D> ();
+			if (projRigidBody == null) {
+				projRigidBody = proj.AddComponent<Rigidbody2D> ();
+			}
+			
+			Vector2 projVelocity = new Vector2 (target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
+			projRigidBody.velocity = projVelocity * projectileSpeed;
+		}
 	}
 	
 	void Idle(){

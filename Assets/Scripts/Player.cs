@@ -26,6 +26,7 @@ public class Player : MonoBehaviour {
 	private bool hasJumped = false;
 	private float jumpDelay = 0.2f;
 	private float timeJumped;
+	private float timeUntilJumpReset;
 
 	void Awake(){
 		startingMoveSpeed = 15f;
@@ -104,7 +105,6 @@ public class Player : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D coll){
-		Debug.Log ("Entering collider: " + coll.collider);
 		if (coll.collider.tag == "LineRendererGO") {
 			jumpCount = 2;
 			canJump = true;
@@ -120,7 +120,6 @@ public class Player : MonoBehaviour {
 	}
 
 	void OnCollisionExit2D(Collision2D coll){
-		Debug.Log("Leaving collider: " + coll.collider);
 		moveSpeed = startingMoveSpeed;
 		rigidBody.gravityScale = startingPlayerGravity;
 	}

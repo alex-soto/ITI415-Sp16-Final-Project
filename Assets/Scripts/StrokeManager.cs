@@ -14,6 +14,7 @@ public class StrokeManager : MonoBehaviour {
 	public float maxMagnitude;
 	public float minMagnitude;
 	public int linesDrawn = 0;
+	public int maxLinePoints = 150;
 	public List<Vector2> currentPoints;
 	public LineRenderer currentLine;
 	public List<LineRenderer> lines;
@@ -82,6 +83,9 @@ public class StrokeManager : MonoBehaviour {
 		if (currentPoints.Count < 2) {
 			return;
 		} else if (currentPoints.Count >= 10) {
+			while (currentPoints.Count > maxLinePoints){
+				currentPoints.RemoveAt(0);
+			}
 			currentLine.SetVertexCount(currentPoints.Count);
 			for (var i = 0; i < currentPoints.Count; i++){
 				currentLine.SetPosition(i,currentPoints[i]);
@@ -97,7 +101,6 @@ public class StrokeManager : MonoBehaviour {
 			//edgeCollider.isTrigger = true;
 			edgeCollider.points = currentPoints.ToArray();
 		}
-
 	}
 
 	public void StopLine(){
