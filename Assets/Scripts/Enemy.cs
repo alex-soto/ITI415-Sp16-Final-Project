@@ -114,7 +114,7 @@ public class Enemy : MonoBehaviour {
 
 	private GameObject _player;
 	private Rigidbody2D rigidBody;
-	private CheckForPlayer CheckForPlayer; 
+	private CheckForPlayer CheckForPlayer;
 	private float attackDistance;
 	private float attackTime;
 	private float moveTime;
@@ -172,16 +172,17 @@ public class Enemy : MonoBehaviour {
 	void Attack(GameObject target, int numProjectiles){
 		attackTime = Time.time;
 		int projectilesRemaining = numProjectiles;
-		for (int i = numProjectiles; i > 0; i--) {
-			GameObject proj = Instantiate(projectile, transform.position, Quaternion.FromToRotation(transform.position, target.transform.position)) as GameObject;
-			Rigidbody2D projRigidBody = proj.GetComponent<Rigidbody2D> ();
-			if (projRigidBody == null) {
-				projRigidBody = proj.AddComponent<Rigidbody2D> ();
-			}
-			
-			Vector2 projVelocity = new Vector2 (target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
-			projRigidBody.velocity = projVelocity * projectileSpeed;
+		GameObject proj = Instantiate(projectile, transform.position, Quaternion.FromToRotation(transform.position, target.transform.position)) as GameObject;
+		Rigidbody2D projRigidBody = proj.GetComponent<Rigidbody2D> ();
+		if (projRigidBody == null) {
+			projRigidBody = proj.AddComponent<Rigidbody2D> ();
 		}
+		
+		Vector2 projVelocity = new Vector2 (target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
+		projRigidBody.velocity = projVelocity * projectileSpeed;
+//		for (int i = numProjectiles; i > 0; i--) {
+//
+//		}
 	}
 	
 	void Idle(){
