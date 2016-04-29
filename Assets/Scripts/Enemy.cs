@@ -133,7 +133,7 @@ public class Enemy : MonoBehaviour {
 
 	void FixedUpdate(){
 
-		if (CheckForPlayer.playerInRange && (moveDelay <= Time.time - moveTime)) {
+		if ((CheckForPlayer.playerInRange == true) && (moveDelay <= Time.time - moveTime)) {
 			Move (_player);
 		}
 
@@ -164,25 +164,22 @@ public class Enemy : MonoBehaviour {
 
 	void Move(GameObject target){
 		moveTime = Time.time; 
-		Vector2 newMove = transform.position - target.transform.position;
-		newMove.Normalize();
+		Vector2 newMove = new Vector2(target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
 		rigidBody.velocity = newMove * moveSpeed;
 	}
 	
 	void Attack(GameObject target, int numProjectiles){
 		attackTime = Time.time;
-		int projectilesRemaining = numProjectiles;
-		GameObject proj = Instantiate(projectile, transform.position, Quaternion.FromToRotation(transform.position, target.transform.position)) as GameObject;
-		Rigidbody2D projRigidBody = proj.GetComponent<Rigidbody2D> ();
-		if (projRigidBody == null) {
-			projRigidBody = proj.AddComponent<Rigidbody2D> ();
+		for (int i = numProjectiles; i > 0; i--) {
+			GameObject proj = Instantiate(projectile, transform.position, Quaternion.FromToRotation(transform.position, target.transform.position)) as GameObject;
+			Rigidbody2D projRigidBody = proj.GetComponent<Rigidbody2D> ();
+			if (projRigidBody == null) {
+				projRigidBody = proj.AddComponent<Rigidbody2D> ();
+			}
+			
+			Vector2 projVelocity = new Vector2 (target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
+			projRigidBody.velocity = projVelocity * projectileSpeed;
 		}
-		
-		Vector2 projVelocity = new Vector2 (target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
-		projRigidBody.velocity = projVelocity * projectileSpeed;
-//		for (int i = numProjectiles; i > 0; i--) {
-//
-//		}
 	}
 	
 	void Idle(){
