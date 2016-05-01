@@ -104,11 +104,19 @@ public class Player : MonoBehaviour {
 
 	}
 
+	IEnumerable KillPlayer(){
+		Destroy (this.gameObject);
+		yield return new WaitForSeconds (2);
+		Application.LoadLevel(Application.loadedLevelName);
+	}
+
 	void OnCollisionEnter2D(Collision2D coll){
 		if (coll.collider.tag == "LineRendererGO") {
 			jumpCount = 2;
 			canJump = true;
 			moveSpeed *= lineSpeedMultiplier;
+		} else if (coll.collider.tag == "Enemy"){
+			StartCoroutine("KillPlayer");
 		}
 
 	}

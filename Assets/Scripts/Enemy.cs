@@ -106,15 +106,17 @@ public class Enemy : MonoBehaviour {
 	public float moveDelay;
 	public float attackDelay;
 	public float moveSpeed;
-	public Color startColor = Color.red;
-	public Color friendlyColor = Color.black;
+//	public Color startColor = Color.red;
+//	public Color friendlyColor = Color.black;
+	public Sprite enemySprite;
+	public Sprite friendlySprite;
 	public GameObject projectile;
 	public float projectileSpeed = 5f;
 	public int numProjectiles = 6;
 
 	private GameObject _player;
 	private Rigidbody2D rigidBody;
-	private CheckForPlayer CheckForPlayer;
+	private CheckForTarget checkForTarget;
 	private float attackDistance;
 	private float attackTime;
 	private float moveTime;
@@ -127,14 +129,16 @@ public class Enemy : MonoBehaviour {
 	}
 
 	void Start(){
-		CheckForPlayer = gameObject.GetComponentInChildren<CheckForPlayer>();
+		checkForTarget = gameObject.GetComponentInChildren<CheckForTarget>();
 		_player = GameObject.FindGameObjectWithTag("Player");
+		checkForTarget.target = null;
 	}
 
 	void FixedUpdate(){
+		target = checkForTarget.target;
 
-		if ((CheckForPlayer.playerInRange == true) && (moveDelay <= Time.time - moveTime)) {
-			Move (_player);
+		if ((checkForTarget.target != null) && (checkForTarget.targetInRange == true) && (moveDelay <= Time.time - moveTime)) {
+			Move (target);
 		}
 
 		if (target != null) {
@@ -150,17 +154,26 @@ public class Enemy : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D col){
-		if (!isFriendly && col.gameObject.tag == "Player") {
-			target = col.gameObject;
-		} else if (isFriendly && col.gameObject.tag != "Player"){
-			target = col.gameObject;
+	void OnCollisionEnter2D(Collision2D col){
+		if (!isFriendly && col.transform.tag == "LineRendererGO") {
+			isFriendly = true;
+			gameObject.tag = "Friendly";
+			checkForTarget.target = null;
+			gameObject.GetComponent<SpriteRenderer>().sprite = friendlySprite;
 		}
 	}
 
-	void OnTriggerExit2D(Collider2D col){
-		CheckForTarget ();
-	}
+//	void OnTriggerEnter2D(Collider2D col){
+//		if (!isFriendly && col.gameObject.tag == "Player") {
+//			target = col.gameObject;
+//		} else if (isFriendly && col.gameObject.tag != "Player"){
+//			target = col.gameObject;
+//		}
+//	}
+//
+//	void OnTriggerExit2D(Collider2D col){
+//		CheckForTarget ();
+//	}
 
 	void Move(GameObject target){
 		moveTime = Time.time; 
@@ -183,10 +196,6 @@ public class Enemy : MonoBehaviour {
 	}
 	
 	void Idle(){
-		
-	}
-	
-	void CheckForTarget(){
 		
 	}
 	

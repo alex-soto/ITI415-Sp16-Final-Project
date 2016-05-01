@@ -12,9 +12,12 @@ public class CameraMovement : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
-		Vector3 targetPos = followTarget.transform.position;
-		Vector3 currentPos = this.transform.position;
-		Vector3 newPos = new Vector3 (targetPos.x, targetPos.y, startingPos.z);
-		transform.position = Vector3.Lerp (currentPos, newPos, 0.5f);
+		if (followTarget != null) {
+			Vector3 targetPos = followTarget.transform.position;
+			Vector3 currentPos = this.transform.position;
+			Vector3 newPos = new Vector3 (targetPos.x, targetPos.y, startingPos.z);
+			transform.position = Vector3.Lerp (currentPos, newPos, 0.5f);
+		}
+
 	}
 }
