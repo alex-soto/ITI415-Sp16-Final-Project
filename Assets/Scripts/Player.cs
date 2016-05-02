@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//enum Directions {
-//	Left,
-//	Right
-//}
-
 public class Player : MonoBehaviour {
 
 	public float startingMoveSpeed;
@@ -21,12 +16,12 @@ public class Player : MonoBehaviour {
 	private bool canJump = false;
 	private float startingPlayerGravity;
 	private Rigidbody2D rigidBody;
-	private CircleCollider2D playerColl;
-	private Vector2 gizmoPosition;
 	private bool hasJumped = false;
 	private float jumpDelay = 0.2f;
 	private float timeJumped;
 	private float timeUntilJumpReset;
+
+	private ScoreManager scoreManager;
 
 	void Awake(){
 		startingMoveSpeed = 15f;
@@ -37,21 +32,18 @@ public class Player : MonoBehaviour {
 		lineSpeedMultiplier = 2f;
 		startingPlayerGravity = 2f;
 		Vector2 pos = transform.position;
-		gizmoPosition = new Vector2 (pos.x, pos.y);
 		rigidBody = GetComponent<Rigidbody2D>();
-		playerColl = GetComponent<CircleCollider2D> ();
-		StrokeManager strokeManager = GetComponent<StrokeManager>();
+		//playerColl = GetComponent<CircleCollider2D> ();
+		//StrokeManager strokeManager = GetComponent<StrokeManager>();
 	}
 
 	void Start(){
 		rigidBody.gravityScale = startingPlayerGravity;
+		scoreManager = GameObject.Find ("ScoreManager").GetComponent<ScoreManager> ();
 	}
 
 	void FixedUpdate(){
 
-		//rigidBody.gravityScale = startingPlayerGravity;
-
-		float cancelDraw = Input.GetAxisRaw ("Fire2");
 		float horizontal = Input.GetAxisRaw ("Horizontal");
 		float vertical = Input.GetAxisRaw ("Vertical");
 
@@ -115,8 +107,9 @@ public class Player : MonoBehaviour {
 			jumpCount = 2;
 			canJump = true;
 			moveSpeed *= lineSpeedMultiplier;
-		} else if (coll.collider.tag == "Enemy"){
+		} else if (coll.collider.tag == "Enemy" || coll.collider.tag == "Projectiles"){
 			StartCoroutine("KillPlayer");
+			scoreManager.GameOver(false);
 		}
 
 	}

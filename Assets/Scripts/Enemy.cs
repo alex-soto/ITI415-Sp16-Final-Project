@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour {
 	public float projectileSpeed = 5f;
 	public int numProjectiles = 6;
 
-	private GameObject _player;
+//	private GameObject _player;
 	private Rigidbody2D rigidBody;
 	private CheckForTarget checkForTarget;
 	private float attackDistance;
@@ -43,7 +43,7 @@ public class Enemy : MonoBehaviour {
 
 	void Start(){
 		checkForTarget = gameObject.GetComponentInChildren<CheckForTarget>();
-		_player = GameObject.FindGameObjectWithTag("Player");
+//		_player = GameObject.FindGameObjectWithTag("Player");
 		checkForTarget.target = null;
 	}
 
@@ -70,10 +70,12 @@ public class Enemy : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D col){
 		if (!isFriendly && col.transform.tag == "LineRendererGO") {
 			isFriendly = true;
-			GameObject.Find ("ScoreManager").GetComponent<ScoreManager>().IncreaseScore();
+			GameObject.Find ("ScoreManager").GetComponent<ScoreManager> ().IncreaseScore ();
 			gameObject.tag = "Friendly";
 			checkForTarget.target = null;
-			gameObject.GetComponent<SpriteRenderer>().sprite = friendlySprite;
+			gameObject.GetComponent<SpriteRenderer> ().sprite = friendlySprite;
+		} else if (isFriendly && col.transform.tag == "Projectiles") {
+			Destroy (this.gameObject);
 		}
 	}
 

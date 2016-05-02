@@ -42,8 +42,6 @@ public class StrokeManager : MonoBehaviour {
 
 	public void StartLine(){
 
-		Vector3 lastPoint = Vector3.zero;
-
 		if (!drawing) {
 			GameObject lineRendererGO = new GameObject ("LineRenderer" + linesDrawn);
 			lineRendererGO.AddComponent<LineRenderer> ();
@@ -70,13 +68,6 @@ public class StrokeManager : MonoBehaviour {
 		mouseDelta *= maxMagnitude;
 
 		Vector3 newPointPos = transform.position + mouseDelta;
-
-//		if (currentPoints.Count > 0) {
-//			lastPoint = currentPoints[currentPoints.Count-1];
-//			Vector3 normalNewPoint = newPointPos;
-//			normalNewPoint.Normalize();
-//			newPointPos = lastPoint + normalNewPoint;
-//		}
 
 		currentPoints.Add (newPointPos);
 
