@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\DestroyObjects.cs" />
      <Compile Include="Assets\Scripts\Enemy.cs" />
      <Compile Include="Assets\Scripts\EnemyProjectile.cs" />
+     <Compile Include="Assets\Scripts\EnemySpawner.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\SafeZone.cs" />
      <Compile Include="Assets\Scripts\ScoreManager.cs" />

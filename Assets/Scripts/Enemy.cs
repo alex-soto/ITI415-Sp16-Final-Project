@@ -112,7 +112,7 @@ public class Enemy : MonoBehaviour {
 	}
 	
 	void Idle(){
-		
+
 	}
 	
 	private Vector3 CalculateSafeJump(){
