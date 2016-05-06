@@ -4,7 +4,7 @@ using System.Collections;
 public class EnemySpawner : MonoBehaviour {
 
 	public GameObject enemy;
-	public float spawnRate;
+	public float spawnRate = 3f;
 	public int maxEnemies;
 	public Vector3[] spawnLocations;
 
@@ -13,7 +13,7 @@ public class EnemySpawner : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		if ((enemiesSpawned < maxEnemies) && (spawnRate >= Time.time - timeLastSpawned)) {
+		if ((enemiesSpawned < maxEnemies) && (spawnRate <= Time.time - timeLastSpawned)) {
 			SpawnEnemy(enemy);
 		}
 	
