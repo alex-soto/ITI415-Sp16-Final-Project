@@ -46,10 +46,10 @@ public class ScoreManager : MonoBehaviour {
 	public void GameOver(bool gameWon){
 		if (gameWon) {
 			gameOver = true;
-			uiText.text = "You won! :) Score: " + score;
+			uiText.text = "You won! Score: " + score;
 		} else {
 			gameOver = true;
-			uiText.text = "You lost. :( Score: " + score;
+			uiText.text = "You lost. Score: " + score;
 		}
 	}
 
