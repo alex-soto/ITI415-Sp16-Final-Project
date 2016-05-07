@@ -1,5 +1,0 @@
-"Tiny Platform Quest Sprites" by dancramp
-http://opengameart.org/content/tiny-platform-quest-sprites
-
-InputManager script from "Advanced Unity 2D: Platformer Player Movement"
-http://www.lynda.com/Unity-tutorials/Building-input-manager/367449/387290-4.htm
